@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { IPaginacao } from '../../interfaces/IPaginacao';
@@ -11,13 +11,22 @@ const ListaRestaurantes = () => {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
   const [proximaPagina, setProximaPagina] = useState('');
   const [paginaAnterior, setPaginaAnterior] = useState('');
+  const [busca, setBusca] = useState('');
 
   useEffect(() => {
     carregaDados('http://localhost:8000/api/v1/restaurantes/');
   }, []);
 
-  function carregaDados(url: string) {
-    axios.get<IPaginacao<IRestaurante>>(url)
+
+  function buscar(evento: React.FormEvent<HTMLFormElement>) {
+    evento.preventDefault()
+    carregaDados('http://localhost:8000/api/v1/restaurantes/', busca)
+  }
+
+  function carregaDados(url: string, busca?:string) {
+    axios.get<IPaginacao<IRestaurante>>(
+      url, 
+      busca ? {params: { search: busca}} : {})
       .then(resposta => {
         setRestaurantes(resposta.data.results);
         setProximaPagina(resposta.data.next);
@@ -43,6 +52,17 @@ const ListaRestaurantes = () => {
     <section className={style.ListaRestaurantes}>
 
       <h1>Os restaurantes mais <em>bacanas</em>!</h1>
+
+      <form onSubmit={evento => buscar(evento)}>
+        <TextField
+          value={busca}
+          onChange={evento => setBusca(evento.target.value)}
+          label="Buscar Restaurante" variant="standard"
+        />
+
+        <Button type="submit" variant="outlined">Buscar</Button>
+      </form>
+
       {restaurantes?.map(item => <Restaurante restaurante={item} key={item.id} />)}
 
       {paginaAnterior &&
