@@ -28,16 +28,16 @@ const ListaRestaurantes = () => {
       })
   }
 
-  function verMais() {
-    axios.get<IPaginacao<IRestaurante>>(proximaPagina)
-      .then(resposta => {
-        setRestaurantes([...restaurantes, ...resposta.data.results]);
-        setProximaPagina(resposta.data.next);
-      })
-      .catch(erro => {
-        console.log(erro);
-      })
-  }
+  //  'function verMais() {
+  //   axios.get<IPaginacao<IRestaurante>>(proximaPagina)
+  //     .then(resposta => {
+  //       setRestaurantes([...restaurantes, ...resposta.data.results]);
+  //       setProximaPagina(resposta.data.next);
+  //     })
+  //     .catch(erro => {
+  //       console.log(erro);
+  //     })
+  // }'
 
   return (
     <section className={style.ListaRestaurantes}>
