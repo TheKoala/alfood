@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import axios, { AxiosRequestConfig } from 'axios';
 import { useEffect, useState } from 'react';
 import { IPaginacao } from '../../interfaces/IPaginacao';
@@ -17,7 +17,8 @@ const ListaRestaurantes = () => {
   const [proximaPagina, setProximaPagina] = useState('');
   const [paginaAnterior, setPaginaAnterior] = useState('');
   const [busca, setBusca] = useState('')
-  
+  const [ordem, setOrdem] = useState('')
+
   useEffect(() => {
     carregaDados('http://localhost:8000/api/v1/restaurantes/');
   }, []);
@@ -33,14 +34,17 @@ const ListaRestaurantes = () => {
         console.log(erro);
       })
   }
-  
+
   function buscar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault()
     const opcoes = {
-      params: { } as IParametrosBusca
+      params: {} as IParametrosBusca
     }
-    if(busca) {
+    if (busca) {
       opcoes.params.search = busca;
+    }
+    if (ordem) {
+      opcoes.params.ordering = ordem;
     }
     carregaDados('http://localhost:8000/api/v1/restaurantes/', opcoes)
   }
@@ -63,11 +67,25 @@ const ListaRestaurantes = () => {
       <h1>Os restaurantes mais <em>bacanas</em>!</h1>
 
       <form onSubmit={evento => buscar(evento)}>
+
         <TextField
           value={busca}
           onChange={evento => setBusca(evento.target.value)}
           label="Buscar Restaurante" variant="standard"
         />
+
+        <FormControl sx={{ margin: "0 10px 0 10px", minWidth: "200px" }}>
+          <InputLabel id="ordem-label">Ordenação</InputLabel>
+          <Select
+            labelId="ordem-label"
+            value={ordem}
+            label="Ordenação"
+            onChange={evento => setOrdem(evento.target.value)}
+          >
+            <MenuItem value={'id'}>Id</MenuItem>
+            <MenuItem value={'nome'}>Nome do Restaurante</MenuItem>
+          </Select>
+        </FormControl>
 
         <Button type="submit" variant="outlined">Buscar</Button>
       </form>
