@@ -17,7 +17,6 @@ const Restaurante = ({ restaurante }: RestauranteProps) => {
     axios.get<IPrato[]>(`http://localhost:8000/api/v1/restaurantes/${restaurante.id}/pratos/`)
       .then(resposta => {
         setPratos(resposta.data);
-        console.log(resposta);
       })
       .catch(erro => {
         console.log(erro);

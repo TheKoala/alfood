@@ -15,18 +15,17 @@ const ListaRestaurantes = () => {
 
   useEffect(() => {
     carregaDados('http://localhost:8000/api/v1/restaurantes/');
-  }, []);
-
+  },[]);
 
   function buscar(evento: React.FormEvent<HTMLFormElement>) {
     evento.preventDefault()
-    carregaDados('http://localhost:8000/api/v1/restaurantes/', busca)
+    carregaDados('http://localhost:8000/api/v1/restaurantes/')
   }
 
-  function carregaDados(url: string, busca?:string) {
+  function carregaDados(url: string) {
     axios.get<IPaginacao<IRestaurante>>(
       url, 
-      busca ? {params: { search: busca}} : {})
+      {params: { search: busca}})
       .then(resposta => {
         setRestaurantes(resposta.data.results);
         setProximaPagina(resposta.data.next);
